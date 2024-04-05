@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TImshail - AI Text Module</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .container {
+        margin-top: 50px;
+      }
+      h1 {
+        color: #343a40;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      #response {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome to TImshail AI Text Module</h1>
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <form id="question-form">
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control"
+                id="question"
+                placeholder="Ask your question"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+      <div id="response" class="mt-4"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#question-form").submit(async function (event) {
+          event.preventDefault();
+          const question = $("#question").val();
+          if (!question.trim()) {
+            $("#response").html(
+              '<p class="text-danger">Please ask a question.</p>'
+            );
+            return;
+          }
+          $("#response").html("<p>Loading...</p>");
+          const response = await fetch("/ask", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ question: question }),
+          });
+          const data = await response.json();
+          $("#response").html(
+            '<p class="text-success">' + data.response + "</p>"
+          );
+        });
+      });
+    </script>
+  </body>
+</html>
